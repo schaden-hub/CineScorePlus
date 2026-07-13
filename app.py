@@ -68,16 +68,25 @@ elif option == "Review":
             st.success("Your review was saved!")
     
 
-    
-
-    
-
 elif option == "Filter by Genre":
-    st.header("Filter by Genre")
-    st.write("Genre filter interface WIP.")
+    st.header("Filter Movies by Genre")
+    st.write("Search page for filtering by genre, will be set up later.")
+
 
 elif option == "View Movieboard":
     st.header("Movieboard")
-    st.write("Movieboard display in progress.")
+    
+    board = generate_movieboard()
+
+    if not board:
+        st.write("No reviews found. Submit reviews to view the movieboard.")
+    else:
+        for movie in board:
+            st.subheader(movie["title"])
+            st.write(f"Director: {movie['director']}")
+            st.write(f"Average Rating: {movie['avg_rating']} ★")
+            st.write(f"Review Count: {movie['review_count']}")
+            st.write(f"Genres: {', '.join(movie['genres'])}")
+            st.write("---")
 
 
