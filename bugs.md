@@ -15,5 +15,5 @@ What happened: After adding code to allow for users to search with a title and r
 Status: Fixed after adding year to the parameters. The TMDB url was built correctly this way, and returned the correct results.
 
 Bug: No search results were appearing on the genre filtering page.
-What happened: Filtered results were always 0 even when the genre matched the searched movie. Converting genre IDs showed mismatched data types that caused issues with searching and filtering results based on genre. 
-Status: Functionality was restored after correct types were used in the correct places. Ids were converted to integers in order to filter correctly. Expanded cleanup loop when filtering by genre. Combined search and filter buttons to avoid Streamlit resetting the app state. 
+What happened: Filtered results were always 0 even when the genre matched the searched movie. Converting genre IDs showed mismatched data types (string vs int) that caused issues with searching and filtering results based on genre. 
+Status: Functionality was restored after editing conversion code. Ids were converted to integers in order to filter correctly. Expanded the cleanup loop when filtering by genre. 
