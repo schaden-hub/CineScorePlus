@@ -83,24 +83,27 @@ elif option == "Filter by Genre":
     selected_genre = st.selectbox("Choose a genre to filter by", genre_names)
 
     # Convert genre names to ID for filtering
-    genre_id = [gid for gid, name in genre_lookup.items() if name == selected_genre]
+    genre_id = next(gid for gid, name in genre_lookup.items() if name == selected_genre) # Use next to build full list and avoid issues with duplicate ID numbers
     genre_id = int(genre_id) # DEBUG
 
     # One button for search and filtering at the same time
     if st.button("Search & Filter"):
         results = search_movie(title, year)
 
+        # DEBUG
         st.write(f"Search returned {len(results)} movies")
 
-        # Convert genre IDs to integers
+        # Convert genre IDs to integers and standardize ID typew
         for m in results:
-            m["genre_ids"] = [int(g) for g in m["genre_ids"]]
+            clean_ids = []
+            for g in m["genre_ids"]:
+                try:
+                    clean_ids.append(int(g))
+                except:
+                    pass
+            m["genre_ids"] = clean_ids
 
-        # DEBUG
-        st.write("Genre ID we are filtering for:", genre_id)
-        st.write("First movie genre IDs:", results[0]["genre_ids"])
-        st.write("Comparison:", genre_id in results[0]["genre_ids"])
-        
+
 
         # Filter results
         filtered = [m for m in results if genre_id in m["genre_ids"]]

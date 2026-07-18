@@ -6,9 +6,10 @@ from keys import TMDB_API_KEY
 
 BASE_URL = "https://api.themoviedb.org/3"
 
-# Load genre lookup without hardcoding
-df_genres = pd.read_csv("genres.csv") # Listed id, genre name
-genre_lookup = dict(zip(df_genres["id"], df_genres["name"])) # Combine ID and word into a list
+# Load in csv information
+df_genres = pd.read_csv("genres.csv")
+df_genres["id"] = df_genres["id"].astype(int)
+genre_lookup = dict(zip(df_genres["id"], df_genres["name"]))
 
 
 
