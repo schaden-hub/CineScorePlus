@@ -84,32 +84,32 @@ elif option == "Filter by Genre":
 
     # Convert genre names to ID for filtering
     genre_id = [gid for gid, name in genre_lookup.items() if name == selected_genre]
+    genre_id = int(genre_id) # DEBUG
 
-    # Buttons
-    search_clicked = st.button("Search")
-    filter_clicked = st.button("Filter by Genre")
-
-    # Run search when button is clicked
-    if search_clicked:
+    # One button for search and filtering at the same time
+    if st.button("Search & Filter"):
         results = search_movie(title, year)
 
-        # Convert genre IDs to integers to avoid type issues
+        st.write(f"Search returned {len(results)} movies")
+
+        # Convert genre IDs to integers
         for m in results:
             m["genre_ids"] = [int(g) for g in m["genre_ids"]]
+
+        # DEBUG
+        st.write("Genre ID we are filtering for:", genre_id)
+        st.write("First movie genre IDs:", results[0]["genre_ids"])
+        st.write("Comparison:", genre_id in results[0]["genre_ids"])
         
-        st.session_state["genre_search_results"] = results
 
-    # Filter results
-    if filter_clicked:
-        results = st.session_state.get("genre_search_results", [])
+        # Filter results
+        filtered = [m for m in results if genre_id in m["genre_ids"]]
 
-        if not results:
-            st.warning("Please search for a movie before filtering.")
-        else:
+        st.write(f"Filtered down to {len(filtered)} movies")
 
-            filtered = [m for m in results if genre_id in m["genre_ids"]]
-            st.session_state["genre_filtered_results"] = filtered
-    
+        st.session_state["genre_filtered_results"] = filtered
+
+
     # Display filtered results
     filtered_results = st.session_state.get("genre_filtered_results", [])
 
