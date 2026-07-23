@@ -91,7 +91,7 @@ elif option == "Filter by Genre":
         results = search_movie(title, year)
 
         # DEBUG
-        st.write(f"Search returned {len(results)} movies")
+        #st.write(f"Search returned {len(results)} movies")
 
         # Convert genre IDs to integers and standardize ID typew
         for m in results:
