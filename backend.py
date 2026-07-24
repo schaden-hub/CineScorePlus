@@ -49,6 +49,7 @@ def search_movie(term, year=None):
         movies.append({
             "id": m["id"],
             "title": m["title"],
+            "poster_path": m.get("poster_path"),
             "year": (m.get("release_date") or "")[:4],
             "overview": m.get("overview", ""),
             "genre_ids": m.get("genre_ids", [])

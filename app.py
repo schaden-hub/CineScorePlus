@@ -30,6 +30,13 @@ if option == "Search":
             # Convert genre IDs to words to display names
             genre_names = [genre_lookup.get(gid, "Unknown") for gid in movie["genre_ids"]]
 
+              # Display movie poster
+            if movie["poster_path"]:
+                poster_url = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
+                st.image(poster_url, width=200)
+            else:
+                st.write("No poster availible.")
+            
             st.write(f"**{movie['title']} ({movie['year']})**")
             st.write(movie["overview"])
             st.write(f"Genres: {', '.join(genre_names)}")
