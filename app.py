@@ -1,5 +1,5 @@
 import streamlit as st
-from backend import search_movie, submit_review, generate_movieboard, get_director, get_movie_details, genre_lookup
+from backend import search_movie, submit_review, generate_movieboard, get_director, get_movie_details, genre_lookup, generate_recommendations, filter_out_reviewed, get_top_genres
 
 
 st.title("CineScore+ Ver 2")
@@ -160,6 +160,30 @@ elif option == "View Movieboard":
             st.write(f"Average Rating: {movie['avg_rating']} ★")
             st.write(f"Review Count: {movie['review_count']}")
             st.write(f"Genres: {', '.join(movie['genres'])}")
+            st.write("---")
+
+# Recommendation Page
+elif option == "Recommendations":
+    st.header("Looking for something new to watch?")
+
+    if st.button("Give me a recommendation"):
+        df_reviews = pd.read_csv("reviews.csv")
+        recs = generate_recommendations(df_reviews, genre_lookup)
+        st.session_state["recs"] = recs
+
+    recs = st.session_state.get("recs", [])
+
+    if recs:
+        for movie in recs:
+            if movie["poster_path"]:
+                poster_url = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
+                st.image(poster_url, width=200)
+
+            st.write(f"**{movie['title']} ({movie['year']})**")
+            st.write(movie["overview"])
+
+            genre_names =[genre_lookup.get(gid, "Unknown") for gid in movie["genre_ids"]]
+            st.write(f"Genres: {','.join(genre_names)}")
             st.write("---")
 
 

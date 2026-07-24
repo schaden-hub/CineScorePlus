@@ -229,8 +229,8 @@ def get_top_genres(df_reviews, genre_lookup):
 
         return sorted_genres[:2] # Return top 2 genres
     
-def recomend_movies_by_genre(top_genres):
-    recomended = []
+def recommend_movies_by_genre(top_genres):
+    recommended = []
 
     for gid in top_genres:
         url = f"https://api.themoviedb.org/3/discover/movie?with_genres={gid}&api_key={TMDB_API_KEY}"
@@ -240,7 +240,7 @@ def recomend_movies_by_genre(top_genres):
             continue
 
         for m in data.get("results", []):
-            recomended.append({
+            recommended.append({
                 "title": m.get("title"),
                 "year": m.get("release_date", "")[:4],
                 "overview": m.get("overview"),
@@ -248,21 +248,21 @@ def recomend_movies_by_genre(top_genres):
                 "poster_path": m.get("poster_path"),
                 "id": m.get("id")
             })
-    return recomended
+    return recommended
 
 def filter_out_reviewed(recomended, df_reviews):
     # Filter out movies user already reviewed
     reviewed_ids = set(df_reviews["movie_id"].tolist())
     return [m for m in recomended if m["id"] not in reviewed_ids]
 
-def generate_recomendations(df_reviews, genre_lookup):
+def generate_recommendations(df_reviews, genre_lookup):
     top_genres = get_top_genres(df_reviews, genre_lookup)
 
     # Check to see if top genres are present
     if not top_genres:
         return []
     
-    recs = recomend_movies_by_genre(top_genres)
+    recs = recommend_movies_by_genre(top_genres)
     final_recs = filter_out_reviewed(recs, df_reviews)
 
     return final_recs[:10] # Top 10 recomendations
