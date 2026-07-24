@@ -202,3 +202,36 @@ def generate_movieboard(top_n=10):
 
     return movieboard
 
+def get_top_genres(df_reviews, genre_lookup):
+    # Identify highest rated movies >= 4 stars
+    high_rated = df_reviews[df_reviews["stars"] >= 4]
+
+    # No high rated movies
+    if high_rated.empty:
+        return []
+    
+    genre_counts = {}
+
+    for _, row in high_rated.iterrows():
+        movie_id = row["movie_id"]
+        details = get_movie_details(movie_id)
+
+        # Skip entry if API fails
+        if not details or "genre_ids" not in details:
+            continue
+
+        # Count genres to find top genres
+        for gid in details["genre_ids"]:
+            genre_counts[gid] = genre_counts(gid, 0) + 1
+        
+        # Sort counted genres by frequency
+        sorted_genres = sorted(genre_counts, key=genre_counts.get, reverse=True)
+
+        return sorted_genres[:2] # Return top 2 genres
+    
+    
+        
+
+    
+
+
