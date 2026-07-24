@@ -17,3 +17,7 @@ Status: Fixed after adding year to the parameters. The TMDB url was built correc
 Bug: No search results were appearing on the genre filtering page.
 What happened: Filtered results were always 0 even when the genre matched the searched movie. Converting genre IDs showed mismatched data types (string vs int) that caused issues with searching and filtering results based on genre. 
 Status: Functionality was restored after editing conversion code. Ids were converted to integers in order to filter correctly. Expanded the cleanup loop when filtering by genre. 
+
+Bug: Key error when referring to star ratings
+What happened: Recieved a key error when implementing recommendation system. The rating column in the csv was referred to as stars in the get_top_genres function. The different names caused a key error.
+Status:

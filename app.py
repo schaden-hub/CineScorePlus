@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from backend import search_movie, submit_review, generate_movieboard, get_director, get_movie_details, genre_lookup, generate_recommendations, filter_out_reviewed, get_top_genres
 
 
@@ -7,7 +8,7 @@ st.title("CineScore+ Ver 2")
 # Page Select
 option = st.sidebar.selectbox(
     "Choose an action:",
-    ["Search", "Review", "Filter by Genre", "View Movieboard"]
+    ["Search", "Review", "Filter by Genre", "View Movieboard", "Recommendations"]
 )
 
 # Search Page

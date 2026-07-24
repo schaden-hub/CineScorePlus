@@ -204,7 +204,7 @@ def generate_movieboard(top_n=10):
 
 def get_top_genres(df_reviews, genre_lookup):
     # Identify highest rated movies >= 4 stars
-    high_rated = df_reviews[df_reviews["stars"] >= 4]
+    high_rated = df_reviews[df_reviews["rating"] >= 4]
 
     # No high rated movies
     if high_rated.empty:
