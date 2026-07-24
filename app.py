@@ -91,16 +91,14 @@ elif option == "Filter by Genre":
 
     # Convert genre names to ID for filtering
     genre_id = next(gid for gid, name in genre_lookup.items() if name == selected_genre) # Use next to build full list and avoid issues with duplicate ID numbers
-    genre_id = int(genre_id) # DEBUG
+   
 
     # One button for search and filtering at the same time
     if st.button("Search & Filter"):
         results = search_movie(title, year)
 
-        # DEBUG
-        #st.write(f"Search returned {len(results)} movies")
 
-        # Convert genre IDs to integers and standardize ID typew
+        # Convert genre IDs to integers and standardize ID type
         for m in results:
             clean_ids = []
             for g in m["genre_ids"]:
@@ -129,6 +127,14 @@ elif option == "Filter by Genre":
         for movie in filtered_results:
             # Convert genre IDs back to names for display
             genre_names = [genre_lookup.get(gid, "Unknown") for gid in movie["genre_ids"]]
+
+
+            # Display movie poster
+            if movie["poster_path"]:
+                poster_url = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
+                st.image(poster_url, width=200)
+            else:
+                st.write("No poster availible.")
 
             st.write(f"**{movie['title']} ({movie['year']})**")
             st.write(movie["overview"])
