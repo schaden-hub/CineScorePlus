@@ -130,9 +130,14 @@ def get_movie_details(movie_id):
     if response.status_code != 200:
         print("TMDB request error:", response.status_code)
         return {}
+
+    data = response.json()
+
+    # Convert TMDB "genres" objects to "genre_ids" 
+    data = standardize_genre_ids(data)
     
-    # Return details in JSON format
-    return response.json()
+    # Return details
+    return data
 
 
 def movies_with_genre(df_movies, genre_id):
@@ -202,12 +207,19 @@ def generate_movieboard(top_n=10):
 
     return movieboard
 
+def standardize_genre_ids(details):
+    # If TMDB returns "genres" objects, convert them to genre_ids for ease of use
+    if "genres" in details and isinstance(details["genres"], list):
+        details["genre_ids"] = [g["id"] for g in details["genres"]]
+    return details
+
 def get_top_genres(df_reviews, genre_lookup):
     # Identify highest rated movies >= 4 stars
     high_rated = df_reviews[df_reviews["rating"] >= 4]
 
     # No high rated movies
     if high_rated.empty:
+        print("No high rated movies.")
         return []
     
     genre_counts = {}
@@ -218,25 +230,43 @@ def get_top_genres(df_reviews, genre_lookup):
 
         # Skip entry if API fails
         if not details or "genre_ids" not in details:
+            print("Skipping movie, no genre_ids:", movie_id)
             continue
 
         # Count genres to find top genres
         for gid in details["genre_ids"]:
-            genre_counts[gid] = genre_counts(gid, 0) + 1
+            genre_counts[gid] = genre_counts.get(gid, 0) + 1
         
-        # Sort counted genres by frequency
-        sorted_genres = sorted(genre_counts, key=genre_counts.get, reverse=True)
+    # Sort counted genres by frequency
+    print("Genre  counts:", genre_counts)
 
-        return sorted_genres[:2] # Return top 2 genres
+    if not genre_counts:
+        print("No genres counted")
+        return []
+    
+    sorted_genres = sorted(genre_counts, key=genre_counts.get, reverse=True)
+ 
+    return sorted_genres[:2] # Return top 2 genres
     
 def recommend_movies_by_genre(top_genres):
     recommended = []
 
     for gid in top_genres:
-        url = f"https://api.themoviedb.org/3/discover/movie?with_genres={gid}&api_key={TMDB_API_KEY}"
+        url = f"{BASE_URL}/discover/movie"
+        params = {
+            "api_key": TMDB_API_KEY,
+            "with_genres": gid,
+            "sort_by": "popularity.desc",
+            "include_adult": True,
+            "language": "en-US",
+            "page": 1
+        }
+
+
         try:
-            data = requests.get(url).json()
+            data = requests.get(url, params=params).json()
         except:
+            print("Discover API failed for genre:", gid)
             continue
 
         for m in data.get("results", []):
@@ -248,6 +278,7 @@ def recommend_movies_by_genre(top_genres):
                 "poster_path": m.get("poster_path"),
                 "id": m.get("id")
             })
+    
     return recommended
 
 def filter_out_reviewed(recomended, df_reviews):

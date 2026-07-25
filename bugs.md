@@ -20,4 +20,8 @@ Status: Functionality was restored after editing conversion code. Ids were conve
 
 Bug: Key error when referring to star ratings
 What happened: Recieved a key error when implementing recommendation system. The rating column in the csv was referred to as stars in the get_top_genres function. The different names caused a key error.
-Status:
+Status: Changed stars reference to rating instead for consistency. This fixed this error.
+
+Bug: Recommednation page was not displaying any results after the button was clicked.
+What happened: The API call in the recommend_movies_by_genre() function was not the correct endpoint, so no information was being returned. Genre ids were also being skipped over due to the returned format being a genres object instead of a numerical ID. 
+Status: Results returned after params were edited to specify the information needed for the display. Converting genre IDs prior to being used for the reccomendation page helped fix the issue of skipping results. 
