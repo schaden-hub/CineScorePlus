@@ -167,12 +167,25 @@ elif option == "View Movieboard":
 elif option == "Recommendations":
     st.header("Looking for something new to watch?")
 
+    try: 
+        df_reviews = pd.read_csv("reviews.csv")
+    except FileNotFoundError:
+        st.error("No reviews found. Review some movies first.")
+        st.stop()
+    except Exception as e:
+        st.error(f"Error reading reviews: {e}")
+        st.stop()
+
     if st.button("Give me a recommendation"):
         df_reviews = pd.read_csv("reviews.csv")
         recs = generate_recommendations(df_reviews, genre_lookup)
         st.session_state["recs"] = recs
 
     recs = st.session_state.get("recs", [])
+
+    if not recs:
+        st.info("No reccomendations available yet. Review some movies before asking for a recommendation.")
+        st.stop()
 
     if recs:
         for movie in recs:
@@ -186,5 +199,10 @@ elif option == "Recommendations":
             genre_names =[genre_lookup.get(gid, "Unknown") for gid in movie["genre_ids"]]
             st.write(f"Genres: {','.join(genre_names)}")
             st.write("---")
+
+    if not recs:
+        st.info("No recommendations available yet. Review more movies for a recommendation.")
+
+
 
 
