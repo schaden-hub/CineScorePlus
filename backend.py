@@ -44,6 +44,7 @@ def search_movie(term, year=None):
     
     results = data.get("results", [])
 
+    # Format result output
     movies = []
     for m in results:
         movies.append({
@@ -61,6 +62,7 @@ def search_movie(term, year=None):
 
 
 def get_director(movie_id):
+    # Set endpoint for director info
     url = f"{BASE_URL}/movie/{movie_id}/credits"
     params = {"api_key": TMDB_API_KEY}
 
@@ -81,6 +83,7 @@ def get_director(movie_id):
         if person.get("job") == "Director":
             return person.get("name", "Unknown")
         
+    # Return Director name
     return "Unknown"
 
 
@@ -235,7 +238,7 @@ def get_top_genres(df_reviews, genre_lookup):
     # Identify highest rated movies >= 4 stars
     high_rated = df_reviews[df_reviews["rating"] >= 4]
 
-    # No high rated movies present
+    # No high rated movies present?
     if high_rated.empty:
         print("No high rated movies.")
         return []
@@ -258,10 +261,12 @@ def get_top_genres(df_reviews, genre_lookup):
     # Sort counted genres by frequency
     print("Genre  counts:", genre_counts)
 
+    # Stop if no genres are counted
     if not genre_counts:
         print("No genres counted from high-rated movies.")
         return []
-    
+
+    # Sort genres with sorted()
     sorted_genres = sorted(genre_counts, key=genre_counts.get, reverse=True)
  
     return sorted_genres[:2] # Return top 2 genres
@@ -270,6 +275,7 @@ def recommend_movies_by_genre(top_genres):
     recommended = []
 
     for gid in top_genres:
+        # Setup endpoint for recommendations
         url = f"{BASE_URL}/discover/movie"
         params = {
             "api_key": TMDB_API_KEY,
@@ -280,7 +286,7 @@ def recommend_movies_by_genre(top_genres):
             "page": 1
         }
 
-
+        # Return error if API does not return expected response
         try:
             data = requests.get(url, params=params).json()
         except:
@@ -292,6 +298,7 @@ def recommend_movies_by_genre(top_genres):
             print("No results returned for genre:", gid)
             continue
 
+        # Format recommendations
         for m in data.get("results", []):
             recommended.append({
                 "title": m.get("title"),
@@ -315,15 +322,17 @@ def filter_out_reviewed(recomended, df_reviews):
 
 def generate_recommendations(df_reviews, genre_lookup):
 
+    # Show error if previous steps in recommendation process fail
     try:
         top_genres = get_top_genres(df_reviews, genre_lookup)
     except Exception as e:
-        print("Error genreating top genres:", e)
+        print("Error generating top genres:", e)
 
     # Check to see if top genres are present
     if not top_genres:
         return []
     
+    # Get recommendations
     recs = recommend_movies_by_genre(top_genres)
 
     # Check to make sure recs are there
@@ -331,6 +340,7 @@ def generate_recommendations(df_reviews, genre_lookup):
         print("No raw recommendations returned.")
         return []
     
+    # Make sure no previously logged movies are present
     final_recs = filter_out_reviewed(recs, df_reviews)
 
     # Final check to make sure recs are present
@@ -338,7 +348,7 @@ def generate_recommendations(df_reviews, genre_lookup):
         print("All recommended movies were already reviewed.")
         return []
 
-    return final_recs[:10] # Top 10 recomendations
+    return final_recs[:10] # Show top 10 recomendations
         
 
     

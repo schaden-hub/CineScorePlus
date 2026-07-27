@@ -3,7 +3,7 @@ import pandas as pd
 from backend import search_movie, submit_review, generate_movieboard, get_director, get_movie_details, genre_lookup, generate_recommendations, filter_out_reviewed, get_top_genres
 
 
-st.title("CineScore+ Ver 2")
+st.title("CineScore+ Version 2.0")
 
 # Page Select
 option = st.sidebar.selectbox(
@@ -15,15 +15,19 @@ option = st.sidebar.selectbox(
 if option == "Search":
     st.header("Search for a Movie")
 
+    # Search prompts for user
     title = st.text_input("Enter a movie title")
     year = st.text_input("Enter a release year (optional)")
 
+    # Search button behavior
     if st.button("Search"):
         results = search_movie(title, year)
         st.session_state["search_results"] = results
 
+    # Get results
     results = st.session_state.get("search_results", [])
 
+    # Display results
     if results:
         st.subheader("Results")
 
@@ -51,6 +55,7 @@ elif option == "Review":
     title = st.text_input("Search for a movie")
     year = st.text_input("Release Year (optional)")
 
+    # Search button behavior
     if st.button("Search"):
         results = search_movie(title, year)
         st.session_state["search_results"] = results
@@ -129,7 +134,6 @@ elif option == "Filter by Genre":
             # Convert genre IDs back to names for display
             genre_names = [genre_lookup.get(gid, "Unknown") for gid in movie["genre_ids"]]
 
-
             # Display movie poster
             if movie["poster_path"]:
                 poster_url = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
@@ -155,6 +159,7 @@ elif option == "View Movieboard":
     if not board:
         st.write("No reviews found. Submit reviews to view the movieboard.")
     else:
+        # Display movieboard
         for movie in board:
             st.subheader(movie["title"])
             st.write(f"Director: {movie['director']}")
@@ -167,6 +172,7 @@ elif option == "View Movieboard":
 elif option == "Recommendations":
     st.header("Looking for something new to watch?")
 
+    # Check if there is reviews present, and they are readable
     try: 
         df_reviews = pd.read_csv("reviews.csv")
     except FileNotFoundError:
@@ -176,6 +182,8 @@ elif option == "Recommendations":
         st.error(f"Error reading reviews: {e}")
         st.stop()
 
+    
+    # Recommendation button behavior
     if st.button("Give me a recommendation"):
         df_reviews = pd.read_csv("reviews.csv")
         recs = generate_recommendations(df_reviews, genre_lookup)
@@ -183,10 +191,12 @@ elif option == "Recommendations":
 
     recs = st.session_state.get("recs", [])
 
+    # Check for correct recommendations
     if not recs:
-        st.info("No reccomendations available yet. Review some movies before asking for a recommendation.")
+        st.info("No recommendations available yet. Review some movies before asking for a recommendation.")
         st.stop()
 
+    # Display recommendation results
     if recs:
         for movie in recs:
             if movie["poster_path"]:
@@ -200,6 +210,7 @@ elif option == "Recommendations":
             st.write(f"Genres: {','.join(genre_names)}")
             st.write("---")
 
+    # Show error message if no recommendations availible
     if not recs:
         st.info("No recommendations available yet. Review more movies for a recommendation.")
 
