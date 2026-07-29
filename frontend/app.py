@@ -1,3 +1,17 @@
+"""
+Streamlit UI for CineScore+ (2.0)
+
+Handles user flows for:
+- Searching for movies
+- Submitting reviews
+- Filtering based on genre tags
+- Viewing the movieboard display
+- Generating recommendations
+
+Backend logic is handled in backend/backend.py
+
+"""
+
 import streamlit as st
 import pandas as pd
 from backend.backend import search_movie, submit_review, generate_movieboard, get_director, get_movie_details, genre_lookup, generate_recommendations, filter_out_reviewed, get_top_genres
@@ -11,7 +25,9 @@ option = st.sidebar.selectbox(
     ["Search", "Review", "Filter by Genre", "View Movieboard", "Recommendations"]
 )
 
-# Search Page
+# --- SEARCH Page ---
+# Allows user to search for movies using TMDB by title and release year (optional).
+# Results show posters, overviews and genre tags. Result information is used throughout through session_state().
 if option == "Search":
     st.header("Search for a Movie")
 
@@ -24,18 +40,21 @@ if option == "Search":
         results = search_movie(title, year)
         st.session_state["search_results"] = results
 
-    # Get results
+    # Get results and store them for later use
     results = st.session_state.get("search_results", [])
 
     # Display results
+    # TODO: Add multiple page navigation for longer search results
+    # TODO: Consider adding loading screen for long API calls
     if results:
         st.subheader("Results")
 
         for movie in results:
-            # Convert genre IDs to words to display names
+            # Convert genre IDs to words to display names for tags instead of ID
             genre_names = [genre_lookup.get(gid, "Unknown") for gid in movie["genre_ids"]]
 
-              # Display movie poster
+              # Display movie poster image, show message if one isn't availible
+              # GOTCHA: TMDB sometimes returns movies with no poster_path
             if movie["poster_path"]:
                 poster_url = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
                 st.image(poster_url, width=200)
@@ -47,7 +66,9 @@ if option == "Search":
             st.write(f"Genres: {', '.join(genre_names)}")
             st.write("---")
 
-# Review Page 
+# --- REVIEW Page ---
+# Lets users search for a movie, select it, and submit a review. The rating is done on a slider from 1 to 5 stars.
+# Stores reviews in reviews.csv for later use in recommendation system and movieboard display.
 elif option == "Review":
     st.header("Review a movie.")
 
@@ -69,6 +90,7 @@ elif option == "Review":
         movie_titles = [f"{m['title']} ({m['year']})" for m in results]
         selected = st.selectbox("Choose a movie", movie_titles)
 
+        # GOTCHA: If TMDB returns movies with the same title, selecting by index might pick the wrong one
         movie = results[movie_titles.index(selected)]
 
         movie_id = movie["id"]
@@ -83,7 +105,8 @@ elif option == "Review":
             submit_review(movie_id, rating, movie_title, genre_ids)
             st.success("Your review was saved!")
     
-# Filter results by genre page
+# --- FILTER RESULTS BY GENRE Page ---
+# Search page, with ability to filter results further based on genre tag
 elif option == "Filter by Genre":
     st.header("Filter Movies by Genre")
 
@@ -150,6 +173,7 @@ elif option == "Filter by Genre":
    
 
 # Movieboard Page
+# Pulls review history from reviews.csv, formats them into a leaderboard to show the top 10 rated films.
 elif option == "View Movieboard":
     st.header("Movieboard")
     
@@ -169,6 +193,8 @@ elif option == "View Movieboard":
             st.write("---")
 
 # Recommendation Page
+# Generates personalized movie recommendations based on the top rated genres.
+# At least one rating of 4 stars or higher is required. Posters and descriptions are displayed.
 elif option == "Recommendations":
     st.header("Looking for something new to watch?")
 
@@ -189,6 +215,7 @@ elif option == "Recommendations":
         recs = generate_recommendations(df_reviews, genre_lookup)
         st.session_state["recs"] = recs
 
+    # Store recommendations 
     recs = st.session_state.get("recs", [])
 
     # Check for correct recommendations
