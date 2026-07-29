@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from backend import search_movie, submit_review, generate_movieboard, get_director, get_movie_details, genre_lookup, generate_recommendations, filter_out_reviewed, get_top_genres
+from backend.backend import search_movie, submit_review, generate_movieboard, get_director, get_movie_details, genre_lookup, generate_recommendations, filter_out_reviewed, get_top_genres
 
 
 st.title("CineScore+ Version 2.0")
