@@ -17,13 +17,17 @@ import requests
 import pandas as pd
 import ast
 import streamlit as st
+import os
 
 TMDB_API_KEY = st.secrets["TMDB_API_KEY"]
 
 BASE_URL = "https://api.themoviedb.org/3"
 
 # Load in csv information
-df_genres = pd.read_csv("genres.csv")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GENRES_PATH = os.path.join(ROOT_DIR, "data", "genres.csv")
+
+df_genres = pd.read_csv(GENRES_PATH)
 
 # Converst TMDB genre CSV into a dictionary for fast ID to nametag mapping
 df_genres["id"] = df_genres["id"].astype(int)
