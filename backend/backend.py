@@ -1,3 +1,18 @@
+"""
+Backend logic for CineScore+ (2.0)
+
+This file handles:
+- TMDB API communication (searching, details, credits)
+- Review storage and formatting for reviews.csv
+- Genre lookup and standardization
+- Movieboard generation
+- Recommendation flow (top genres -> discover API endpoint -> filtering)
+
+All functions here are used by Streamlit UI in frontend/app.py
+
+"""
+
+
 import requests
 import pandas as pd
 import ast
@@ -14,6 +29,13 @@ genre_lookup = dict(zip(df_genres["id"], df_genres["name"]))
 
 
 def search_movie(term, year=None):
+    """
+    Search TMDB for movies matching a title and optional release year.
+
+    Args:
+
+    Returns:
+    """
     url = f"{BASE_URL}/search/movie"    
 
     params = {
@@ -62,6 +84,11 @@ def search_movie(term, year=None):
 
 
 def get_director(movie_id):
+    """
+        Args:
+    
+        Returns:
+    """
     # Set endpoint for director info
     url = f"{BASE_URL}/movie/{movie_id}/credits"
     params = {"api_key": TMDB_API_KEY}
@@ -88,6 +115,11 @@ def get_director(movie_id):
 
 
 def submit_review(movie_id, rating, movie_title, genre_ids=None):
+    """
+        Args:
+    
+        Returns:
+    """
     # Validate User review
     if rating < 1 or rating > 5:
         print("You must pick between 1 and 5 stars.")
@@ -121,7 +153,11 @@ def submit_review(movie_id, rating, movie_title, genre_ids=None):
 
 
 def get_movie_details(movie_id):
-
+    """
+        Args:
+    
+        Returns:
+    """
     # Get movie details from TMDB
     url = f"{BASE_URL}/movie/{movie_id}"
     params = {
@@ -155,11 +191,21 @@ def get_movie_details(movie_id):
 
 
 def movies_with_genre(df_movies, genre_id):
+    """
+        Args:
+    
+        Returns:
+    """
     # Filter results by user selected genre
     return df_movies[df_movies["genre_ids"].apply(lambda g: genre_id in g)]
 
 
 def generate_movieboard(top_n=10):
+    """
+        Args:
+    
+        Returns:
+    """
     # Read reviews.csv and check to see if there is reviews
     try:
         df = pd.read_csv("reviews.csv")
@@ -222,13 +268,22 @@ def generate_movieboard(top_n=10):
     return movieboard
 
 def standardize_genre_ids(details):
+    """
+        Args:
+    
+        Returns:
+    """
     # If TMDB returns "genres" objects, convert them to genre_ids for ease of use
     if "genres" in details and isinstance(details["genres"], list):
         details["genre_ids"] = [g["id"] for g in details["genres"]]
     return details
 
 def get_top_genres(df_reviews, genre_lookup):
-
+    """
+        Args:
+    
+        Returns:
+    """
     # CSV check for content
     if df_reviews.empty:
         print("CSV is empty. Make a review.")
@@ -272,6 +327,11 @@ def get_top_genres(df_reviews, genre_lookup):
     return sorted_genres[:2] # Return top 2 genres
     
 def recommend_movies_by_genre(top_genres):
+    """
+        Args:
+    
+        Returns:
+    """
     recommended = []
 
     for gid in top_genres:
@@ -316,12 +376,22 @@ def recommend_movies_by_genre(top_genres):
     return recommended
 
 def filter_out_reviewed(recomended, df_reviews):
+    """
+        Args:
+    
+        Returns:
+    """
     # Filter out movies user already reviewed
     reviewed_ids = set(df_reviews["movie_id"].tolist())
     return [m for m in recomended if m["id"] not in reviewed_ids]
 
 def generate_recommendations(df_reviews, genre_lookup):
-
+    """
+        Args:
+    
+        Returns:
+    """
+    
     # Show error if previous steps in recommendation process fail
     try:
         top_genres = get_top_genres(df_reviews, genre_lookup)
