@@ -16,8 +16,9 @@ All functions here are used by Streamlit UI in frontend/app.py
 import requests
 import pandas as pd
 import ast
+import streamlit as st
 
-from keys import TMDB_API_KEY
+TMDB_API_KEY = st.secrets["TMDB_API_KEY"]
 
 BASE_URL = "https://api.themoviedb.org/3"
 
