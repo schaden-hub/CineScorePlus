@@ -33,8 +33,14 @@ def search_movie(term, year=None):
     Search TMDB for movies matching a title and optional release year.
 
     Args:
+        term (str): Movie title to search for.
+        year (str or int, optional): Release year filter.
 
     Returns:
+        list[dict]: List of movie dictionaries containing id, title, poster_path, year, overview and genre_ids.
+
+    Notes:
+        GOTCHA: TMDB may return mvoies with missing fields, such as poster_path.
     """
     url = f"{BASE_URL}/search/movie"    
 
@@ -84,10 +90,18 @@ def search_movie(term, year=None):
 
 
 def get_director(movie_id):
+    
     """
+    Fetch the director's name for a given movie using the TMDB credits endpoint. Used for movieboard.
+
         Args:
+            movie_id (int): TMDB movie ID.
     
         Returns:
+            str: Director name, or "Unknown" if not found.
+        
+        Notes:
+            GOTCHA: Some movies have multiple 'Director' roles or none listed.
     """
     # Set endpoint for director info
     url = f"{BASE_URL}/movie/{movie_id}/credits"
@@ -115,10 +129,19 @@ def get_director(movie_id):
 
 
 def submit_review(movie_id, rating, movie_title, genre_ids=None):
+
     """
+    Append a new review to reviews.csv, creating the file if needed.
+
         Args:
-    
-        Returns:
+            movie_id (int): TMDB movie ID.
+            rating (float): User 'star' rating from 1 to 5.
+            movie_title (str): Movie title.
+            genre_ids (list[int], optional): Genre IDs associated with the movie.
+        
+        Notes:
+            TODO: Consider validating reviews or updating existing ones.
+
     """
     # Validate User review
     if rating < 1 or rating > 5:
@@ -154,9 +177,16 @@ def submit_review(movie_id, rating, movie_title, genre_ids=None):
 
 def get_movie_details(movie_id):
     """
+    Retrieve detailed TMDB metadata for a movie.
+
         Args:
-    
+            movie_id (int): TMDB Movie ID.
+
         Returns:
+            dict: Movie details including standardized genre_ids.
+        
+        Notes:
+            GOTCHA: TMDB may return unexpected formats or missing fields.
     """
     # Get movie details from TMDB
     url = f"{BASE_URL}/movie/{movie_id}"
@@ -192,9 +222,14 @@ def get_movie_details(movie_id):
 
 def movies_with_genre(df_movies, genre_id):
     """
+    Filter a Dataframe of movies by specific genre ID.
+
         Args:
+            df_movies (pd.DataFrame): Movie data.
+            genre_id (int): Genre ID to filter by.
     
         Returns:
+            pd.DataFrame: Filtered movies by the specified genre.
     """
     # Filter results by user selected genre
     return df_movies[df_movies["genre_ids"].apply(lambda g: genre_id in g)]
@@ -202,9 +237,16 @@ def movies_with_genre(df_movies, genre_id):
 
 def generate_movieboard(top_n=10):
     """
+    Create a movieboard based on user's top rated movies.
+
         Args:
+            top_n (int): Number of top rated movies to display.
     
         Returns:
+            list[dict]: Movieboard containing title, director, avg_rating , review_count, and genres.
+
+        Notes:
+            GOTCHA: TMDB may fail to return details for older or more obscure movies.
     """
     # Read reviews.csv and check to see if there is reviews
     try:
@@ -269,9 +311,12 @@ def generate_movieboard(top_n=10):
 
 def standardize_genre_ids(details):
     """
+    Convert TMDB 'genres' objects into a flat list of genre_ids.
         Args:
-    
+            details (dict): TMDB movie details dictionary.
+
         Returns:
+              dict: Updated details with genre_ids included.
     """
     # If TMDB returns "genres" objects, convert them to genre_ids for ease of use
     if "genres" in details and isinstance(details["genres"], list):
@@ -280,9 +325,17 @@ def standardize_genre_ids(details):
 
 def get_top_genres(df_reviews, genre_lookup):
     """
+    Identify the user's top genres based on movie rated 4+ 'stars'.
+
         Args:
+            df_reviews (pd.DataFrame): User review data.
+            genre_lookup (dict): Mapping of genre IDs to genre name tags.
     
         Returns:
+            list[int]: Top 2 genre IDs sorted by frequency.
+        
+        Notes:
+            TODO: Consider weighting genres by rating strength.
     """
     # CSV check for content
     if df_reviews.empty:
@@ -328,9 +381,16 @@ def get_top_genres(df_reviews, genre_lookup):
     
 def recommend_movies_by_genre(top_genres):
     """
+    Use TMDB Discover API to get popular movies for each of the user's top genres.
+
         Args:
+            top_genres (list[int]): Genre IDs to recommend movies from.
     
         Returns:
+            list[dict]: Raw recommended movie dictionaries.
+        
+        Notes:
+            GOTCHA: Discover API may return adult content unless it is filtered.
     """
     recommended = []
 
@@ -377,9 +437,14 @@ def recommend_movies_by_genre(top_genres):
 
 def filter_out_reviewed(recomended, df_reviews):
     """
+    Remove movies from recommendations that the user has already reviewed.
+
         Args:
+            recommended (list[dict]): Raw recommended movies.
+            df_reviews (pd.DataFrame): User review data from csv.
     
         Returns:
+            list[dict]: Filtered recommendations.
     """
     # Filter out movies user already reviewed
     reviewed_ids = set(df_reviews["movie_id"].tolist())
@@ -387,9 +452,18 @@ def filter_out_reviewed(recomended, df_reviews):
 
 def generate_recommendations(df_reviews, genre_lookup):
     """
+    Full recommendation flow:
+    - Identify top genres using get_top_genres()
+    - Fetch movies from TMDB Discover API
+    - Filter out previously reviewed films
+    - Return top 10 recommendations
+
         Args:
+            df_reviews (pd.DataFrame): User review data.
+            genre_lookup (dict): Mapping genre IDs to name tags.
     
         Returns:
+            list[dict]: Final curated recommendations.
     """
     
     # Show error if previous steps in recommendation process fail
