@@ -11,6 +11,12 @@ Handles user flows for:
 Backend logic is handled in backend/backend.py
 
 """
+import sys
+import os
+
+# Add repo root to Python path so Streamlit Cloud can find the backend folder
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(ROOT_DIR)
 
 import streamlit as st
 import pandas as pd
