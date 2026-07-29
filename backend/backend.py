@@ -23,6 +23,8 @@ BASE_URL = "https://api.themoviedb.org/3"
 
 # Load in csv information
 df_genres = pd.read_csv("genres.csv")
+
+# Converst TMDB genre CSV into a dictionary for fast ID to nametag mapping
 df_genres["id"] = df_genres["id"].astype(int)
 genre_lookup = dict(zip(df_genres["id"], df_genres["name"]))
 
@@ -53,6 +55,7 @@ def search_movie(term, year=None):
     if year:
        params["primary_release_year"] = year
 
+    # TODO: Cache API responses to reduce repeated network calls.
     response = requests.get(url, params=params)
 
     # Check to make sure results are actually being sent
@@ -71,6 +74,7 @@ def search_movie(term, year=None):
         return []
     
     results = data.get("results", [])
+    # TODO : Add error handling for incorrect reviews.csv rows.
 
     # Format result output
     movies = []
@@ -263,7 +267,7 @@ def generate_movieboard(top_n=10):
     # Convert genre_ids back to lists
     df["genre_ids"] = df["genre_ids"].apply(lambda x: ast.literal_eval(x) if x else []) # Add space if no genre id is present
     
-    # group movies by ID
+    # Group movies by movie_id to calculate avg rating and counts
     grouped_ID = df.groupby("movie_id")["rating"].agg(["mean", "count"]).reset_index()
     grouped_ID = grouped_ID.sort_values(by=["mean", "count"], ascending=[False, False])
 
@@ -322,6 +326,8 @@ def standardize_genre_ids(details):
     if "genres" in details and isinstance(details["genres"], list):
         details["genre_ids"] = [g["id"] for g in details["genres"]]
     return details
+
+# --- Full recommendation flow: top genres -> discover API -> filtering ---
 
 def get_top_genres(df_reviews, genre_lookup):
     """
@@ -419,6 +425,7 @@ def recommend_movies_by_genre(top_genres):
             continue
 
         # Format recommendations
+        # GOTCHA: TMDB Discover API may return movies with no release_date.
         for m in data.get("results", []):
             recommended.append({
                 "title": m.get("title"),
