@@ -58,11 +58,154 @@
    ```
    Make sure this file is not committed to public repos.
 
-   ### Run the Application
+   ### Run the Application 
+   #### Setup on Streamlit Community Cloud
+   CineScore+ is currently deployed on Streamlit Community Cloud. For reference, here are the steps to deploy the app on Streamlit Community Cloud. NOTE: You will need access to the repo to be able to redeploy this app. 
+
+   1. Sign into Streamlit Community Cloud with Github.
+   2. Choose the app entry point. For this project the path is:
+        frontend/app.py
+   3. Add API key in "secrets".
+   Streamlit Cloud allows you to enter API keys as a part of the app setup for deployment. When prompted to enter any "secrets" enter this:
+   ```python
+   TMDB_API_KEY = your_api_key_here
+   ```
+   4. Deploy the app
+   Click save to advance and launch the app.
+
+   #### After Deployment
+   - The app runs online through the Streamlit Community Cloud.
+   - Any updates to the repo are pushed automatically to the Streamlit Community Cloud.
+   - TMDB API Key is accessed and stored in secrets using st.secrets["TMDB_API_KEY"].
+
+   NOTE: The app may become inactive if left for extended periods of time, simply click the button to reboot if this happens.
 
    ## Backend Architecture
+   CineScore+'s backend is responsible for all data processing, TMDB communication, review storage, and recommendation flow. The functions in backend/backend.py are imported into frontend.py to wire the logic to the Streamlit UI.
+
+   ### Overview
+   The backend provides:
+   - A genre lookup system using genres.csv
+   - Review storage using reviews.csv
+   - Movieboard generation logic
+   - A personalized recommendation flow based on top rated genres.
+
+   ### TMDB API Layer
+   CineScore+ communicates with TMDB using HTTPS requests. The API key is stored using Streamlit Community Cloud's secrets feature. The key is accessed in code using:
+   ```python
+   TMDB_API_KEY = st.secrets["TMDB_API_KEY"]
+   ```
+   #### Key Functions
+   - search_movie(title, year=None)
+   Searches TMDB for a matching title from user input, and returns a list of matching films with basic metadata.
+
+   - get_movie_details(movie_id)
+   Grabs movie details including genres, runtime, release date, poster and overview. 
+
+   - get_director(movie_id)
+   Gets crew information and pulls director name for movieboard.
+
+   - recommend_movies_by_genre(genre_id)
+   Use TMDB's Discover API to fetch movies associated with a specific genre. 
+
+   Developer Notes:
+   - All API calls use requests.get()
+   - Responses are validated for missing fields
+   - TMDB genre IDs are numeric and require mapping to name tags
+   - Poster URLs are constructued using TMDB's image base URL
+
+   ### Genre Lookup System
+   TMDB returns genres as numeric IDs. CineScore+ converts these into name tags for readability. A lookup table (data/genres.csv) is used for conversion.
+
+   - The CSV is loaded using an absolute path to avoid issues with Streamlit Community Cloud's working directory.
+   - IDs are cast to integers
+   - A dictionary is constructed.
+   ```python
+   genre_lookup = dict(zip(df_genres["id"], df_genres["name"]))
+   ```
+   This lookup supports:
+   - Displaying genre names in search results
+   - Storing genre IDs with reviews
+   - Computing top genres for the recommendation flow
+
+   ### Review Storage
+   User reviews are stored in data/reviews.csv. The file acts as a database for most data flows within the application
+
+    - submit_review(movie_id, title, rating, genre_ids)
+    Adds a new review to the CSV. If the file does not exist, it is created automatically.
+
+    #### Data Model
+    Each review consists of:
+
+    - Movie ID
+    - Title
+    - Rating
+    - Genre IDs (stored as stringified list)
+
+    Genre lists are converted back to Python lists using:
+    ```python
+    ast.literal_eval()
+    ```
+    Developer Notes:
+    - CSV writes using absolute paths
+    - Reviews accumulate over time
+
+    ### Movieboard Generation
+    The Movieboard is a curated list of all movies that have been reviewed, organized based on popularity. 
+
+    #### Key Function
+
+    - generate_movieboard()
+    Organizes metadata for movieboard display.
+
+    #### Process
+    1. Load all reviews from reviews.csv
+    2. Group reviews by movie
+    3. Calculate average star rating for each movie
+    4. Grab TMDB details for each movie.
+    5. Grab director name
+    6. Construct the list of movie entries
+
+    Each entry includes:
+    - Title
+    - Average rating
+    - Genres
+    - Director
+    - Poster
+    - Release year
+
+    ### Recommendation Flow
+    CineScore+ can provide personalized movie recommendations based on review history
+
+    #### Key Functions
+    - get_top_genres()
+    Determines user's favorite genres based on reviews
+
+    - recommend_movies_by_genre(genre_id)
+    Grabs movies from TMDB's Discover API. 
+
+    - filter_out_reviewed(recommendations, reviewed_table)
+    Removes movies from recommendations that have been previously reviewed.
+
+    - generate_recommendations()
+    Collects all information and returns top 10 relevant recommendations 
+
+    #### Flow
+    1. Identify top genres from reviews.csv
+    2. Grab movies from TMDB based on those genres
+    3. Remove movies that have already been reviewed
+    4. Return a curated list of recommendations
+
+    ### Error Handling
+    The backend includes safeguards:
+    - Missing TMDB fields are replaced with defaults
+    - API failures return empty results instead of a crash
+    - Missing posters or release dates are shown as placeholders
+    - Genre parsing uses ast.literal_eval to avoid crashing
+
 
    ## Frontend Architecture
+   
 
    ## Data Flow
 
