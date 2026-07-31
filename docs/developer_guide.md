@@ -205,9 +205,121 @@
 
 
    ## Frontend Architecture
-   
+   The frontend is implemented in frontend/app.py using Streamlit. It handles user interaction, page navigation, UI rendering, and communication with the backend functionality. All data processing is done using the backend, and the frontend focuses on presentation and user flow.
+
+   ### Overview
+   - Renders CineScore+ interface using Streamlit
+   - Imports backend functions for search, reviews, movieboard generation, and recommendations
+   - Manages page navagation through a sidebar dropdown menu
+   - Displays TMDB results, user reviews, and personalized recommendations
+   - Handles user input for searches and review submissions.
+
+   ### Page Structure and Navigation
+   CineScore+ uses a sidebar dropdown menu to switch between pages:
+
+   - **Search Movies**
+   - **Submit Review**
+   - **Movieboard**
+   - **Recommendations**
+
+   Navigation is controlled by a single selectbox:
+
+   ```python
+   page = st.sidebar.selectbox("Navigation", ["Search Movies", "Submit Review", "Movieboard", "Recommendations"])
+   ```
+   ### Search Page
+   The Search page lets users look up movies using TMDB.
+
+   #### Flow
+   1. User enters a movie title
+   2. Frontend calls search_movie()
+   3. Results are displayed with:
+        - Poster
+        - Title
+        - Release year
+        - Genres
+        - Overview
+
+   #### Key UI Components
+   - st.text_input() for search terms
+   - st.button() to trigger search
+   - st.image() for posters
+   - st.write() for metadata
+
+   ### Submit Review Page
+   This page allows users to submit a rating for a movie.
+
+   #### Flow
+   1. User enters a movie title
+   2. Frontend calls search_movie() based on search
+   3. User selects movie they want to review
+   4. User enters a rating out of 5
+   5. Frontend calls submit_review()
+
+   #### Key UI Components
+   - Dropdown for selecting a movie
+   - Slider for rating scale
+   - Button to submit
+   - Sucess messsage after saving
+
+   ### Movieboard Page
+   The Movieboard displays movies ranked on popularity.
+
+   #### Flow 
+   1. Frontend calls generate_movieboard()
+   2. Backend returns a list of upgraded movie entries
+   3. Frontend displays each entry with:
+        - Poster
+        - Title
+        - Average rating
+        - Director
+        - Genres
+        - Release year
+    
+    #### Key UI Compontents
+    - st.header()
+    - st.image()
+    - st.write()
+
+   ### Recommendations Page
+   This page displays personalized recommendations based on the user's review history.
+
+   #### Flow 
+   1. Frontend calls generate_recommendations()
+   2. Backend identifies top genres and fetches TMDB results
+   3. Backend filters out previously reviewed movies
+   4. Frontend displays recommended movies
+
+   #### Key UI Components
+   - Posters
+   - Titles
+   - Genre name tags
+   - Release years
+
+   ### State Management
+   CineScore+ users Streamlit's built in state model:
+   - Each page re-runs upon interaction
+   - Backend functions are stateless.
+   - CSV files provide use throughout sessions
+
+   ### Error Handling and User Feedback
+   The frontend provides:
+   - Messages when no search results are found
+   - Warnings when fields are missing
+   - Sucess messages after submitting reviews
+   - Missing posters or metadata is communicated.
+
+    All critical errors (API fails, missing CSVs) are handled in the backend.
+
+   ### Design Philosophy
+   The UI is intentionally designed to be:
+   - Minimal
+   - Reponsive
+   - Easy for future improvement
+   - Dependent on backend logic
 
    ## Data Flow
+   
 
    ## Known Issues
 
