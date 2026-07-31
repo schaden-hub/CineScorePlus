@@ -319,11 +319,64 @@
    - Dependent on backend logic
 
    ## Data Flow
-   
+   At a high level, CineScore+ operates through four major data pathways:
 
-   ## Known Issues
+   1. **User Input -> Frontend**
+   2. **Frontend -> Backend Functions**
+   3. **Backend -> TMDB API / CSV Storage**
+   4. **Backend Results -> Frontend Rendering**
+
+   Search, review, movieboard, recommendations all follow this flow. 
+
+   ### Search Flow
+
+   ### Review Submission Flow
+
+   ### Movieboard FLow
+
+   ### Recommendation Flow
+
+   ### Error and Missing Data Flow
+
+   ### Summary Diagram 
+
+   ## Known Issues and Possible Solutions
+
+   ### TMDB Data Inconsistencies - Minor
+
+   ### TMDB Rate Limits - Major
+
+   ### CSV Storage Limitations - Major
+
+   ### Genre Parsing Edge Cases - Minor 
+
+   ### Recommendation Quality Varibility - Minor
+
+   ### Streamlit Rerun Behavior - Minor
+
+   ### Missing or Corrupted Files - Major
 
    ## Future Roadmap
+
+   ### Improve Data Storage
+
+   ### User Accounts & Personalization
+
+   ### Enhanced Recommendation Engine
+
+   ### Caching for Performance
+
+   ### Expanded Metadata Display
+
+   ### Improved UI/UX
+
+   ### Error Logging and Monitoring 
+
+   ### Optional Cloud Database Integration
+
+   ### Automated Testing
+
+   ### Code Cleanup
    
     
 
