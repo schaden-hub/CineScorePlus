@@ -330,19 +330,68 @@
 
    ### Search Flow
 
+   1. User enters a movie title to search for.
+   2. Frontend calls search_movie() with the user's search term.
+   3. Backend sends a request to TMDB's Search API.
+   4. Backend recieves JSON response and finds the corresponding genre ID to the name in genres.csv.
+   5. Frontend displays results with posters, titles, release years, genres and overviews.
+
    ### Review Submission Flow
+
+   1. User searches for a movie using search_movie().
+   2. User selects the movie they want to review from the dropdown.
+   3. User chooses a rating out of 5 on the slider.
+   4. Frontend calls submit_review() with movie ID, title, rating and genre IDs.
+   5. Backend writes the review to reviews.csv (creating the file if needed).
+   6. Frontend displays a success confirmation.
 
    ### Movieboard FLow
 
+   1. Frontend calls generate_movieboard().
+   2. Backend loads all reviews from reviews.csv.
+   3. Backend groups reviews by movie ID.
+   4. Backend calculates average ratings for each movie.
+   5. Backend grabs TMDB details and director information.
+   6. Backend returns upgraded movie entries for movieboard display.
+   7. Frontend displays posters, titles, ratings, genres, director(s) and release years.
+
    ### Recommendation Flow
 
-   ### Error and Missing Data Flow
+   1. Frontend calls generate_recommendations().
+   2. Backend loads review history from reviews.csv.
+   3. Backend identifies the user's top genres.
+   4. Backend grabs movies from TMDB's Discover API for those genres.
+   5. Backend filters out movies the user already reviewed.
+   6. Backend returns a curated list of recommended movies.
+   7. Frontend displays posters and metadata for each recommended movie.
 
    ### Summary Diagram 
 
+   ```
+   User Input
+       ↓
+    Frontend (Streamlit)
+       ↓
+    Backend Functions
+       ↓
+    TMDB API / CSV data storage
+       ↓
+    Processed Results
+       ↓
+    Frontend Rendering
+    ```
+
    ## Known Issues and Possible Solutions
+   CineScore+ is in a functional state currently, but some possible issues exist that could impact user experience. Each issue is labeled based on severity, and contains possible solutions that could be implemented in future development.
 
    ### TMDB Data Inconsistencies - Minor
+   Repeated searches and API calls may trigger a rate limit from TMDB. When this occurs, search results may appear empty, slow or incomplete. Due to the app's reliance on TMDB functions, reate limiting can significantly impact user experience.
+
+   **Possible Solutions**
+   - Implement cachin using Streamlit's st.cache_data
+   - Add retry logic with short delays
+   - Reduce redunant API calls by caching movie details and genre lookups
+   - Display a UX-friendly message when TMDB is temporarily unavailable.
 
    ### TMDB Rate Limits - Major
 
