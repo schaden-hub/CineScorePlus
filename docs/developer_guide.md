@@ -7,7 +7,7 @@
    - Search for movies
    - Submit ratings for reviews
    - Filter movies by a genre tag
-   - View a personalized movieboard based on review history
+   - View a personalized Movieboard based on review history
    - Receive recommendations based on top rated genres
 
    The application consists of a backend .py file that handles API communication, data processing, and the recommendation flow, and a frontend .py file (app.py)  that provides an interactive experience using Streamlit. Data is stored locally using CSV files (reviews.csv and genres.csv), and TMDB provides external movie data. 
@@ -16,7 +16,7 @@
    CINESCOREPLUS/
 
         backend/
-            backend.py      # TMDB API calls, review storage, movieboard processing, recommendations
+            backend.py      # TMDB API calls, review storage, Movieboard processing, recommendations
         
         frontend/
             app.py          # Streamlit UI logic and page flows (run this using Streamlit command)
@@ -103,7 +103,7 @@
    Grabs movie details including genres, runtime, release date, poster and overview. 
 
    - get_director(movie_id)
-   Gets crew information and pulls director name for movieboard.
+   Gets crew information and pulls director name for Movieboard.
 
    - recommend_movies_by_genre(genre_id)
    Use TMDB's Discover API to fetch movies associated with a specific genre. 
@@ -112,7 +112,7 @@
    - All API calls use requests.get()
    - Responses are validated for missing fields
    - TMDB genre IDs are numeric and require mapping to name tags
-   - Poster URLs are constructued using TMDB's image base URL
+   - Poster URLs are constructed using TMDB's image base URL
 
    ### Genre Lookup System
    TMDB returns genres as numeric IDs. CineScore+ converts these into name tags for readability. A lookup table (data/genres.csv) is used for conversion.
@@ -156,7 +156,7 @@
     #### Key Function
 
     - generate_movieboard()
-    Organizes metadata for movieboard display.
+    Organizes metadata for Movieboard display.
 
     #### Process
     1. Load all reviews from reviews.csv
@@ -209,8 +209,8 @@
 
    ### Overview
    - Renders CineScore+ interface using Streamlit
-   - Imports backend functions for search, reviews, movieboard generation, and recommendations
-   - Manages page navagation through a sidebar dropdown menu
+   - Imports backend functions for search, reviews, Movieboard generation, and recommendations
+   - Manages page navigation through a sidebar dropdown menu
    - Displays TMDB results, user reviews, and personalized recommendations
    - Handles user input for searches and review submissions.
 
@@ -260,7 +260,7 @@
    - Dropdown for selecting a movie
    - Slider for rating scale
    - Button to submit
-   - Sucess messsage after saving
+   - Success message after saving
 
    ### Movieboard Page
    The Movieboard displays movies ranked on popularity.
@@ -306,7 +306,7 @@
    The frontend provides:
    - Messages when no search results are found
    - Warnings when fields are missing
-   - Sucess messages after submitting reviews
+   - Success messages after submitting reviews
    - Missing posters or metadata is communicated.
 
     All critical errors (API fails, missing CSVs) are handled in the backend.
@@ -314,7 +314,7 @@
    ### Design Philosophy
    The UI is intentionally designed to be:
    - Minimal
-   - Reponsive
+   - Responsive
    - Easy for future improvement
    - Dependent on backend logic
 
@@ -333,7 +333,7 @@
    1. User enters a movie title to search for.
    2. Frontend calls search_movie() with the user's search term.
    3. Backend sends a request to TMDB's Search API.
-   4. Backend recieves JSON response and finds the corresponding genre ID to the name in genres.csv.
+   4. Backend gets JSON response and finds the corresponding genre ID to the name in genres.csv.
    5. Frontend displays results with posters, titles, release years, genres and overviews.
 
    ### Review Submission Flow
@@ -352,7 +352,7 @@
    3. Backend groups reviews by movie ID.
    4. Backend calculates average ratings for each movie.
    5. Backend grabs TMDB details and director information.
-   6. Backend returns upgraded movie entries for movieboard display.
+   6. Backend returns upgraded movie entries for Movieboard display.
    7. Frontend displays posters, titles, ratings, genres, director(s) and release years.
 
    ### Recommendation Flow
@@ -385,16 +385,16 @@
    CineScore+ is in a functional state currently, but some possible issues exist that could impact user experience. Each issue is labeled based on severity, and contains possible solutions that could be implemented in future development.
 
    ### TMDB Rate Limits - Major
-   Repeated searches and API calls may trigger a rate limit from TMDB. When this occurs, search results may appear empty, slow or incomplete. Due to the app's reliance on TMDB functions, reate limiting can significantly impact user experience.
+   Repeated searches and API calls may trigger a rate limit from TMDB. When this occurs, search results may appear empty, slow or incomplete. Due to the app's reliance on TMDB functions, rate limiting can significantly impact user experience.
 
    **Possible Solutions**
-   - Implement cachin using Streamlit's st.cache_data
+   - Implement caching using Streamlit's st.cache_data
    - Add retry logic with short delays
-   - Reduce redunant API calls by caching movie details and genre lookups
+   - Reduce redundant API calls by caching movie details and genre lookups
    - Display a UX-friendly message when TMDB is temporarily unavailable.
 
    ### TMDB Data Inconsistences - Minor
-   TMDB will occasionally return incomplete metadata such as missing posters, release dates, or genre lists. Since CineScore+ relies on TMDB responses, these gaps can lead to partialy filled movie entries or placeholder images in the UI.
+   TMDB will occasionally return incomplete metadata such as missing posters, release dates, or genre lists. Since CineScore+ relies on TMDB responses, these gaps can lead to partially filled movie entries or placeholder images in the UI.
 
    **Possible Solutions**
     - Add placeholder images for missing posters and text for missing fields
@@ -403,16 +403,16 @@
 
    ### CSV Storage Limitations - Major
    CineScore+ stores reviews in reviews.csv, which works for small-scale use, but introduces some issues:
-   - The file grows indefinately over time
-   - No user-specific review seperation
-   - File corruption could break the whole pipeline for movieboard and recommendations
+   - The file grows indefinitely over time
+   - No user-specific review separation
+   - File corruption could break the whole pipeline for Movieboard and recommendations
    
    **Possible Solutions**
 
    - Migrate to SQLite for structured, reliable storage
-   - Add file integrity checsk before reading
-   - Implment user-specific tables or identifiers
-   - Create a maintenece script to archive or trim older entries
+   - Add file integrity checks before reading
+   - Implement user-specific tables or identifiers
+   - Create a maintenance script to archive or trim older entries
 
    ### Genre Parsing Edge Cases - Minor
    Genre IDs are stored as stringified lists in the CSV. If the file is manually edited or becomes malformed, ast.literal_eval() may fail, causing missing genres or errors in the recommendation flow.
@@ -421,7 +421,7 @@
    - Validate genre lists before saving
    - Add error handling around ast.literal_eval()
 
-   ### Recommendation Quality Varibility - Minor
+   ### Recommendation Quality Variability - Minor
    The current recommendation system is intentionally simple, reliant on the user's most reviewed genres. This could cause generic recommendations, repeated movies within the list of recommendations, and limited variety if few movies are present in TMDB's genre group.
 
    **Possible Solutions**
@@ -430,12 +430,12 @@
     - Incorporate multi-genre scoring instead of single-genre matching
 
    ### Streamlit Rerun Behavior - Minor
-   Streamlit re-runs the entire script on every interaction. This can lead to repeated API calls, flickering UI elements, and slight delays when movieboard or recommendations are being loaded.
+   Streamlit re-runs the entire script on every interaction. This can lead to repeated API calls, flickering UI elements, and slight delays when Movieboard or recommendations are being loaded.
 
    **Possible Solutions**
    - Cache TMDB responses and Movieboard results
    - Move more intensive functions to be cached in the backend
-   - Reduce unnecessary refreshes by reorganizing UI compontents
+   - Reduce unnecessary refreshes by reorganizing UI components
 
    ### Missing or Corrupted Files - Major
 
@@ -450,12 +450,12 @@
 
    **Possible Solutions**
    - Add automatic CSV validation on startup
-   - Recreate missing files with default strucutre
+   - Recreate missing files with default structure
    - Add backup/restore logic for reviews.csv
    - Log file errors for debugging purposes
 
    ## Future Roadmap
-   This roadmap outlines potential improvments that could be implemented in CineScore+ in future development. 
+   This roadmap outlines potential improvements that could be implemented in CineScore+ in future development. 
 
    ### Improve Data Storage
    CineScore+ currently uses CSV files for storing reviews and genre data. While a simple system, CSVs limit scalability and reliability. Moving to a lightweight database such as SQLite would provide better long term stability
@@ -466,7 +466,7 @@
    - Foundation of multi-user support
 
    ### User Accounts & Personalization
-   Adding optional user accounts allows for seperate review histories, and more accurate recommendations. This could be implemented using Streamlit's authentication features or using a lightweight external auth service, such as SupaBase.
+   Adding optional user accounts allows for separate review histories, and more accurate recommendations. This could be implemented using Streamlit's authentication features or using a lightweight external auth service, such as SupaBase.
 
    **Benefits**
    - Personalized Movieboards
@@ -483,7 +483,7 @@
    - Multi-genre similarity matching
 
    ### Caching for Performance
-   Caching TMDB respones and Movieboard results would reduce API calls, improve responsiveness, and help avoid the rate-limit issues.
+   Caching TMDB response and Movieboard results would reduce API calls, improve responsiveness, and help avoid the rate-limit issues.
 
    **Benefits**
    - Faster search results
@@ -501,7 +501,7 @@
    - TMDB user ratings
 
    ### Improved UI/UX
-   The current UI is intentionally minimal. Future veriosns could introduce more visual polish.
+   The current UI is intentionally minimal. Future versions could introduce more visual polish.
 
    **Ideas**
    - Custom CSS Styling
@@ -519,7 +519,7 @@
    - Better long term maintainability
 
    ### Optional Cloud Database Integration
-   If CineScore+ grows beyond Streamlit Cloud usage, moving to a cloud database would support multi user enviroments.
+   If CineScore+ grows beyond Streamlit Cloud usage, moving to a cloud database would support multi user environments.
 
    **Possible databases**
    - Supabase

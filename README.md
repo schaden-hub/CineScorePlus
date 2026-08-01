@@ -9,7 +9,7 @@ CineScore+ is a simple and intuitive movie review app that lets users:
 - View a personalized Movieboard that shows top rated movies from review history
 - Receive recommendations based on their highest rated genres
 
-All movie data is sourced from The Movie Databse (TMDB). The app is ran through the Streamlit Community Cloud.
+All movie data is sourced from The Movie Database (TMDB). The app is ran through the Streamlit Community Cloud.
 
 ## Accessing the App
 Currently, the app is deployed on Streamlit Community Cloud. Click the button below to access it.
@@ -48,7 +48,7 @@ Use this page to browse movies by a specific genre.
 2. Select a genre from the dropdown to filter the results by.
 3. Results will be displayed within the selected genre.
 
-Searching within a specific genre can help narrow down results better, or to look for a specifc movie within a specific genre group.
+Searching within a specific genre can help narrow down results better, or to look for a specific movie within a specific genre group.
 
 ## Submit Review
 
@@ -122,6 +122,6 @@ All data is provided by TMDB.
 Currently, not in the current version. This may be added in future development.
 
 **Why are some movies missing posters?**
-TMDB may not have an image availible in the database.
+TMDB may not have an image available in the database.
 
 
