@@ -455,26 +455,88 @@
    - Log file errors for debugging purposes
 
    ## Future Roadmap
+   This roadmap outlines potential improvments that could be implemented in CineScore+ in future development. 
 
    ### Improve Data Storage
+   CineScore+ currently uses CSV files for storing reviews and genre data. While a simple system, CSVs limit scalability and reliability. Moving to a lightweight database such as SQLite would provide better long term stability
+
+   **Benefits**
+   - Reduced risk of corruption
+   - Easier querying and filtering
+   - Foundation of multi-user support
 
    ### User Accounts & Personalization
+   Adding optional user accounts allows for seperate review histories, and more accurate recommendations. This could be implemented using Streamlit's authentication features or using a lightweight external auth service, such as SupaBase.
+
+   **Benefits**
+   - Personalized Movieboards
+   - Individual review histories
+   - Multi user public deployment
+   - Ability to save preferences
 
    ### Enhanced Recommendation Engine
+   The current recommendation system is entirely based on genres. A more advanced engine could be used to incorporate additional TMDB endpoints or even machine learning techniques.
+
+   **Possible Upgrades**
+   - TMDB's "similar movies" endpoint
+   - Weighted scoring using TMDB ratings and popularity
+   - Multi-genre similarity matching
 
    ### Caching for Performance
+   Caching TMDB respones and Movieboard results would reduce API calls, improve responsiveness, and help avoid the rate-limit issues.
+
+   **Benefits**
+   - Faster search results
+   - Smoother Moviebaord loading time
+   - Reduced dependency on TMDB
 
    ### Expanded Metadata Display
+   Movie entries could have expanded information to enrich the user experience.
+
+   **Potential Additions**
+   - Cast lists
+   - Runtime
+   - Budget and revenue
+   - Links to Trailers, or where to watch the film
+   - TMDB user ratings
 
    ### Improved UI/UX
+   The current UI is intentionally minimal. Future veriosns could introduce more visual polish.
 
-   ### Error Logging and Monitoring 
+   **Ideas**
+   - Custom CSS Styling
+   - Genre badges
+   - Star-based rating widgets
+   - Hover tooltips
+   - More structure layout of pages
+
+   ### Error Logging and Monitoring
+   Adding lightweight logging would help future developer diagnose issues easier.
+
+   **Benefits**
+   - Easier debugging
+   - Clearer visibility with API issues
+   - Better long term maintainability
 
    ### Optional Cloud Database Integration
+   If CineScore+ grows beyond Streamlit Cloud usage, moving to a cloud database would support multi user enviroments.
+
+   **Possible databases**
+   - Supabase
+   - Firebase
+   - PlanetScale
+   - MongoDB Atlas
 
    ### Automated Testing
+   Introducing unit tests would ensure reliability as the codebase grows.
 
-   ### Code Cleanup
+   **Recommended Test Areas**
+   - TMDB related functions
+   - CSV operations and validations
+   - Recommendation processes
+   - Movieboard generation
+
+   
    
     
 
