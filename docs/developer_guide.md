@@ -384,7 +384,7 @@
    ## Known Issues and Possible Solutions
    CineScore+ is in a functional state currently, but some possible issues exist that could impact user experience. Each issue is labeled based on severity, and contains possible solutions that could be implemented in future development.
 
-   ### TMDB Data Inconsistencies - Minor
+   ### TMDB Rate Limits - Major
    Repeated searches and API calls may trigger a rate limit from TMDB. When this occurs, search results may appear empty, slow or incomplete. Due to the app's reliance on TMDB functions, reate limiting can significantly impact user experience.
 
    **Possible Solutions**
@@ -393,17 +393,66 @@
    - Reduce redunant API calls by caching movie details and genre lookups
    - Display a UX-friendly message when TMDB is temporarily unavailable.
 
-   ### TMDB Rate Limits - Major
+   ### TMDB Data Inconsistences - Minor
+   TMDB will occasionally return incomplete metadata such as missing posters, release dates, or genre lists. Since CineScore+ relies on TMDB responses, these gaps can lead to partialy filled movie entries or placeholder images in the UI.
+
+   **Possible Solutions**
+    - Add placeholder images for missing posters and text for missing fields
+    - Cache previously retrieved movie details to reduce repeated failures
+    - Display a small warning icon or note when metadata is incomplete   
 
    ### CSV Storage Limitations - Major
+   CineScore+ stores reviews in reviews.csv, which works for small-scale use, but introduces some issues:
+   - The file grows indefinately over time
+   - No user-specific review seperation
+   - File corruption could break the whole pipeline for movieboard and recommendations
+   
+   **Possible Solutions**
 
-   ### Genre Parsing Edge Cases - Minor 
+   - Migrate to SQLite for structured, reliable storage
+   - Add file integrity checsk before reading
+   - Implment user-specific tables or identifiers
+   - Create a maintenece script to archive or trim older entries
+
+   ### Genre Parsing Edge Cases - Minor
+   Genre IDs are stored as stringified lists in the CSV. If the file is manually edited or becomes malformed, ast.literal_eval() may fail, causing missing genres or errors in the recommendation flow.
+
+   **Possible Solutions**
+   - Validate genre lists before saving
+   - Add error handling around ast.literal_eval()
 
    ### Recommendation Quality Varibility - Minor
+   The current recommendation system is intentionally simple, reliant on the user's most reviewed genres. This could cause generic recommendations, repeated movies within the list of recommendations, and limited variety if few movies are present in TMDB's genre group.
+
+   **Possible Solutions**
+    - Use TMDB's "similar movies" endpoint
+    - Weight recommendations by TMDB rating or popularity
+    - Incorporate multi-genre scoring instead of single-genre matching
 
    ### Streamlit Rerun Behavior - Minor
+   Streamlit re-runs the entire script on every interaction. This can lead to repeated API calls, flickering UI elements, and slight delays when movieboard or recommendations are being loaded.
+
+   **Possible Solutions**
+   - Cache TMDB responses and Movieboard results
+   - Move more intensive functions to be cached in the backend
+   - Reduce unnecessary refreshes by reorganizing UI compontents
 
    ### Missing or Corrupted Files - Major
+
+   If reviews.csv is missing or corrupted:
+   - The Movieboard will appear empty
+   - Recommendation process may fail
+   - Review history is lost
+
+   If genres.csv is missing: 
+   - Genre names won't be displayed
+   - Recommendation quality decreases
+
+   **Possible Solutions**
+   - Add automatic CSV validation on startup
+   - Recreate missing files with default strucutre
+   - Add backup/restore logic for reviews.csv
+   - Log file errors for debugging purposes
 
    ## Future Roadmap
 
