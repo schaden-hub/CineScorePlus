@@ -39,6 +39,17 @@ Use this page to look up films using TMDB's movie database.
 
 If no results appear, check spelling or using fewer search words.
 
+## Filter by Genre
+
+Use this page to browse movies by a specific genre.
+
+### How to Filter
+1. Enter a movie title into the search bar. Add a release year if needed.
+2. Select a genre from the dropdown to filter the results by.
+3. Results will be displayed within the selected genre.
+
+Searching within a specific genre can help narrow down results better, or to look for a specifc movie within a specific genre group.
+
 ## Submit Review
 
 Leave a rating for movies you have seen.
