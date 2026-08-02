@@ -39,7 +39,7 @@
    - TMDB API key
    ### Install Dependencies
    ```bash
-   pip instal -r requirements.txt
+   pip install -r requirements.txt
    ```
    ### Add TMDB API Key
    NOTICE: You must generate your own TMDB API Key.
@@ -276,7 +276,7 @@
         - Genres
         - Release year
     
-    #### Key UI Compontents
+    #### Key UI Components
     - st.header()
     - st.image()
     - st.write()
@@ -297,7 +297,7 @@
    - Release years
 
    ### State Management
-   CineScore+ users Streamlit's built in state model:
+   CineScore+ users Streamlit's built-in state model:
    - Each page re-runs upon interaction
    - Backend functions are stateless.
    - CSV files provide use throughout sessions
@@ -326,7 +326,7 @@
    3. **Backend -> TMDB API / CSV Storage**
    4. **Backend Results -> Frontend Rendering**
 
-   Search, review, movieboard, recommendations all follow this flow. 
+   Search, review, Movieboard, recommendations all follow this flow. 
 
    ### Search Flow
 
@@ -393,7 +393,7 @@
    - Reduce redundant API calls by caching movie details and genre lookups
    - Display a UX-friendly message when TMDB is temporarily unavailable.
 
-   ### TMDB Data Inconsistences - Minor
+   ### TMDB Data Inconsistencies - Minor
    TMDB will occasionally return incomplete metadata such as missing posters, release dates, or genre lists. Since CineScore+ relies on TMDB responses, these gaps can lead to partially filled movie entries or placeholder images in the UI.
 
    **Possible Solutions**
@@ -487,7 +487,7 @@
 
    **Benefits**
    - Faster search results
-   - Smoother Moviebaord loading time
+   - Smoother Movieboard loading time
    - Reduced dependency on TMDB
 
    ### Expanded Metadata Display
