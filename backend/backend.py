@@ -323,7 +323,8 @@ def generate_movieboard(top_n=10):
             "review_count": review_count,
             "genres": genre_names,
             "director": director,
-            "poster": poster_url 
+            "poster": poster_url,
+            "debug_details": details # Debug for poster issue
 
         }
 
