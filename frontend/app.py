@@ -193,8 +193,9 @@ elif option == "View Movieboard":
         for movie in board:
             
             # Display movie poster
-            if movie["poster"]:
-                st.image(movie["poster"], width=200)
+            poster = movie.get("poster")
+            if poster:
+                st.image(poster, width=200)
             else:
                 st.write("No poster available.")
             
