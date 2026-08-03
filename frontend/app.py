@@ -168,7 +168,7 @@ elif option == "Filter by Genre":
                 poster_url = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
                 st.image(poster_url, width=200)
             else:
-                st.write("No poster availible.")
+                st.write("No poster available.")
 
             st.write(f"**{movie['title']} ({movie['year']})**")
             st.write(movie["overview"])
@@ -191,13 +191,6 @@ elif option == "View Movieboard":
     else:
         # Display movieboard
         for movie in board:
-            
-            # Display movie poster
-            poster = movie.get("poster")
-            if poster:
-                st.image(poster, width=200)
-            else:
-                st.write("No poster available.")
             
             st.subheader(movie["title"])
             st.write(f"Director: {movie['director']}")
