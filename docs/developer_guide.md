@@ -226,7 +226,7 @@ CineScore+ uses a sidebar dropdown menu to switch between pages:
 - **Movieboard**
 - **Recommendations**
 
-![Navigation Menu Screenshot]()
+![Navigation Menu Screenshot](./images/navbar.png)
 
 Navigation is controlled by a single selectbox:
 
