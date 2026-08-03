@@ -28,13 +28,13 @@ CINESCOREPLUS/
      docs/
          developer_guide.md      # This document
 
-     keys.py                     # TMDB API key
+     keys.py                     # TMDB API key (local dev only)
      requirements.txt            # Python dependencies
      README.md                   # User guide
 
 ## Installation and Setup
 ### Requirements
-- Python 3.13+
+- Python 3.10+
 - pip package manager
 - TMDB API key
 ### Install Dependencies
@@ -278,7 +278,6 @@ The Movieboard displays movies ranked on popularity.
 1. Frontend calls generate_movieboard()
 2. Backend returns a list of upgraded movie entries
 3. Frontend displays each entry with:
-     - Poster
      - Title
      - Average rating
      - Director
