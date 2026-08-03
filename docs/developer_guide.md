@@ -222,6 +222,8 @@
    - **Movieboard**
    - **Recommendations**
 
+   ![Navigation Menu Screenshot](C:\Users\cdsch\OneDrive\Pictures\navbar.png)
+
    Navigation is controlled by a single selectbox:
 
    ```python
