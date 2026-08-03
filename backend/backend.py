@@ -313,6 +313,9 @@ def generate_movieboard(top_n=10):
         if not genre_names:
             genre_names = ["No genre tags available"]
 
+        # DEBUG
+        st.write("MOVIEBOARD ID:", movie_id)
+
         
         # Get director name using get_director()
         director = get_director(movie_id)
