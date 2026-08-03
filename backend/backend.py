@@ -18,6 +18,7 @@ import pandas as pd
 import ast
 import streamlit as st
 import os
+import json 
 
 TMDB_API_KEY = st.secrets["TMDB_API_KEY"]
 
@@ -156,6 +157,11 @@ def submit_review(movie_id, rating, movie_title, genre_ids=None):
     if rating < 1 or rating > 5:
         print("You must pick between 1 and 5 stars.")
         return
+
+    # Fetch real TMDB details to fix poster issue with movieboard
+    details = get_movie_details(movie_id)
+    real_id = details.get("id", movie_id)
+    real_genres = details.get("genre_ids", genre_ids or [])
     
     # Load existing reviews (if any)
     try:
@@ -163,19 +169,15 @@ def submit_review(movie_id, rating, movie_title, genre_ids=None):
     except FileNotFoundError:
         df = pd.DataFrame(columns=["movie_id", "title", "rating", "genre_ids"])
 
-    # Check to see if there is genre ids, add space if none
-    if genre_ids is None:
-        genre_ids_str = ""
-    else:
-        genre_ids_str = str(genre_ids)
 
     # Add a new row for the new review
     new_row = {
         "movie_id": movie_id,
         "title": movie_title,
         "rating": float(rating),
-        "genre_ids": genre_ids_str
+        "genre_ids": json.dumps(real_genres)
     }
+    
     # Add new review to the bottom of reviews.csv
     df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
@@ -324,7 +326,7 @@ def generate_movieboard(top_n=10):
             "genres": genre_names,
             "director": director,
             "poster": poster_url,
-            "debug_details": details # Debug for poster issue
+            "debug_details": details # Debug for poster issueee
 
         }
 

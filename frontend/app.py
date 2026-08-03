@@ -191,9 +191,6 @@ elif option == "View Movieboard":
     else:
         # Display movieboard
         for movie in board:
-
-            # DEBUG
-            st.write("RAW TMDB DETAILS:", movie.get("debug_details"))
             
             # Display movie poster
             poster = movie.get("poster")
