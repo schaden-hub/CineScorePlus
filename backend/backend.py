@@ -222,8 +222,15 @@ def get_movie_details(movie_id):
         print("Invalid TMDB response format for movie:", movie_id)
         return {}
 
+
+    # Save poster path
+    poster_path = data.get("poster_path")
+
     # Convert TMDB "genres" objects to "genre_ids" 
     data = standardize_genre_ids(data)
+
+    # Add poster_path back into returned dictionary
+    data["poster_path"] = poster_path
     
     # Return details
     return data
