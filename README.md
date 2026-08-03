@@ -29,6 +29,8 @@ CineScore+ uses a simple sidebar menu to switch between pages for each app funct
 
 ## Search Movies
 
+![Search Screenshot](./docs/images/search.png)
+
 Use this page to look up films using TMDB's movie database.
 
 ### How to Search
@@ -52,6 +54,8 @@ Searching within a specific genre can help narrow down results better, or to loo
 
 ## Submit Review
 
+![Review Screenshot]()
+
 Leave a rating for movies you have seen.
 
 ## How to Submit a Review
@@ -66,6 +70,8 @@ Your reviews will be used to rank entries on the Movieboard.
 
 ## Movieboard
 
+![Movieboard Screenshot](./images/movieboard.png)
+
 The Movieboard shows all movies that have been reviewed, and ranks them by average rating.
 
 **What you'll see in each entry:**
@@ -79,7 +85,9 @@ The Movieboard shows all movies that have been reviewed, and ranks them by avera
 
 The Movieboard automatically updates as you add reviews.
 
-## Recommendations 
+## Recommendations
+
+![Recommendations](./docs/images/recommendations.png)
 
 Get personalized recommendations based on your top-rated genres.
 

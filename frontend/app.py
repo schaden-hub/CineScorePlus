@@ -191,6 +191,14 @@ elif option == "View Movieboard":
     else:
         # Display movieboard
         for movie in board:
+            
+            # Display movie poster
+            if movie["poster_path"]:
+                poster_url = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
+                st.image(poster_url, width=200)
+            else:
+                st.write("No poster available.")
+            
             st.subheader(movie["title"])
             st.write(f"Director: {movie['director']}")
             st.write(f"Average Rating: {movie['avg_rating']} ★")
