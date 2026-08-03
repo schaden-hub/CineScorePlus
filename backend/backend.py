@@ -289,6 +289,13 @@ def generate_movieboard(top_n=10):
         details = get_movie_details(movie_id)
         title = details.get("title", "Unknown title")
 
+        # Get poster
+        poster_path = details.get("poster_path")
+        if poster_path:
+            poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}"
+        else:
+            poster_url = None
+
         # Convert TMDB Genre IDs to words
         tmdb_genres = details.get("genres", [])
         genre_names = [genre_lookup[g["id"]] for g in tmdb_genres if g["id"] in genre_lookup]
@@ -308,7 +315,8 @@ def generate_movieboard(top_n=10):
             "avg_rating": float(round(avg, 2)),
             "review_count": review_count,
             "genres": genre_names,
-            "director": director
+            "director": director,
+            "poster": poster_url 
 
         }
 
