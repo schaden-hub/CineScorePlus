@@ -54,7 +54,9 @@ Searching within a specific genre can help narrow down results better, or to loo
 
 ## Submit Review
 
-![Review Screenshot]()
+![Review Screenshot](./docs/images/Review.png)
+
+![Review Success Screenshot](./docs/images/ReviewSuccess.png)
 
 Leave a rating for movies you have seen.
 
@@ -62,7 +64,7 @@ Leave a rating for movies you have seen.
 
 1. Search for a movie, same as the Search instructions.
 2. Select the movie from the dropdown you would like to review.
-3. CHoose a rating from 1-5 stars.
+3. Choose a rating from 1-5 stars.
 4. Click **Submit Review**
 5. A confirmation message that your review has been saved will appear.
 
@@ -70,18 +72,18 @@ Your reviews will be used to rank entries on the Movieboard.
 
 ## Movieboard
 
-![Movieboard Screenshot](./images/movieboard.png)
+![Movieboard Screenshot](./docs/images/movieboard.png)
 
 The Movieboard shows all movies that have been reviewed, and ranks them by average rating.
 
 **What you'll see in each entry:**
 
-- Poster
 - Title
 - Average rating
 - Director 
 - Genres 
 - Release year
+*(Posters will be added in future development)*
 
 The Movieboard automatically updates as you add reviews.
 
