@@ -237,6 +237,8 @@ page = st.sidebar.selectbox("Navigation", ["Search Movies", "Submit Review", "Mo
 ### Search Page
 The Search page lets users look up movies using TMDB.
 
+![Search Page Screenshot](./images/search.png)
+
 #### Flow
 1. User enters a movie title
 2. Frontend calls search_movie()
