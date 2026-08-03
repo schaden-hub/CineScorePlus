@@ -172,12 +172,12 @@ def submit_review(movie_id, rating, movie_title, genre_ids=None):
 
     # Add a new row for the new review
     new_row = {
-        "movie_id": movie_id,
+        "movie_id": real_id,
         "title": movie_title,
         "rating": float(rating),
         "genre_ids": json.dumps(real_genres)
     }
-    
+
     # Add new review to the bottom of reviews.csv
     df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
