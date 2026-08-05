@@ -137,6 +137,8 @@ elif option == "Filter by Genre":
     if st.button("Search & Filter"):
         results = search_movie(title, year)
 
+        if not results:
+            st.warning("No movies found in this genre.")
 
         # Convert genre IDs to integers and standardize ID type
         for m in results:
