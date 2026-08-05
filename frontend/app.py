@@ -44,6 +44,10 @@ if option == "Search":
     # Search button behavior
     if st.button("Search"):
         results = search_movie(title, year)
+
+        if not results:
+            st.warning("No results found. Check spelling or try fewer words.")
+    
         st.session_state["search_results"] = results
 
     # Get results and store them for later use
@@ -54,6 +58,7 @@ if option == "Search":
     # TODO: Consider adding loading screen for long API calls
     if results:
         st.subheader("Results")
+
 
         for movie in results:
             # Convert genre IDs to words to display names for tags instead of ID
