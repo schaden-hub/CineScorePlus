@@ -316,7 +316,6 @@ def generate_movieboard(top_n=10):
 
         # Assemble movieboard entry
         movie_entry = {
-            "id": movie_id,
             "title": title,
             "avg_rating": float(round(avg, 2)),
             "review_count": review_count,
